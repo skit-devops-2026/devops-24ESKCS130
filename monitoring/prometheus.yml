@@ -4,18 +4,18 @@ global:
 scrape_configs:
   - job_name: prometheus
     static_configs:
-      - targets: [ "localhost:9090" ]
+      - targets: ["localhost:9090"]
 
   - job_name: lostfound-portal
     metrics_path: /probe
     params:
-      module: [ http_2xx ]
+      module: [http_2xx]
     static_configs:
-      - targets: [ "http://host.docker.internal:8080" ]
+      - targets: ["http://host.docker.internal:8080"]
     relabel_configs:
-      - source_labels: [ __address__ ]
+      - source_labels: [__address__]
         target_label: __param_target
-      - source_labels: [ __param_target ]
+      - source_labels: [__param_target]
         target_label: instance
       - target_label: __address__
         replacement: blackbox:9115
