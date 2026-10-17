@@ -6,7 +6,8 @@
 
 ## 🔎 About
 
-Lost & Found Portal is a full-stack web application designed to help campuses, offices, or organizations manage lost and found items in one centralized, searchable place — instead of relying on notice boards, WhatsApp groups, or word of mouth that rarely reach the right person.
+ # Lost & Found Portal is a full-stack web application designed to help campuses, offices, or organizations manage lost and found items in one centralized, searchable place — instead of relying on notice boards, WhatsApp groups, or word of mouth that rarely reach the right person.
+Live URL: https://lostfound-portal-24eskcs130.netlify.app
 
 **Core Features**
 

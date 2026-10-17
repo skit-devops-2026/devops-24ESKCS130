@@ -11,7 +11,7 @@ scrape_configs:
     params:
       module: [http_2xx]
     static_configs:
-      - targets: ["http://host.docker.internal:8080"]
+      - targets: ["https://lostfound-portal-24eskcs130.netlify.app"]
     relabel_configs:
       - source_labels: [__address__]
         target_label: __param_target
