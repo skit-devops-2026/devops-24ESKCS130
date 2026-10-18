@@ -28,14 +28,6 @@ make install && make run
 
 ## Live URL
 
-<Add once M5 is done. Until then, leave as is.>
-
-## Health endpoint
-
-`GET /health` returns the running commit SHA. See `Makefile` and the milestone sheet for why this is required.
-
-## Live URL
-
 - **Production Live URL**: https://lostfound-portal-24eskcs130.netlify.app
 - **Production Health Endpoint**: https://lostfound-portal-24eskcs130.netlify.app/health
 - **Local Deployment URL**: http://localhost:8080
