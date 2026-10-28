@@ -1,24 +1,26 @@
-import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { AuthProvider } from "./AuthContext.jsx";
+import Navbar from "./Navbar.jsx";
 import Home from "./Home.jsx";
-import About from "./About.jsx";
-import Contact from "./Contact.jsx";
+import Browse from "./Browse.jsx";
+import PostItem from "./PostItem.jsx";
+import Dashboard from "./Dashboard.jsx";
+import Auth from "./Auth.jsx";
 
-function App() {
-  return (
-    <BrowserRouter>
-      <nav>
-        <Link to="/">Home</Link> |{" "}
-        <Link to="/about">About</Link> |{" "}
-        <Link to="/contact">Contact</Link>
-      </nav>
-
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/contact" element={<Contact />} />
-      </Routes>
-    </BrowserRouter>
-  );
+export default function App() {
+    return (
+        <BrowserRouter>
+            <AuthProvider>
+                <Navbar />
+                <Routes>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/browse" element={<Browse />} />
+                    <Route path="/post" element={<PostItem />} />
+                    <Route path="/edit/:id" element={<PostItem />} />
+                    <Route path="/dashboard" element={<Dashboard />} />
+                    <Route path="/auth" element={<Auth />} />
+                </Routes>
+            </AuthProvider>
+        </BrowserRouter>
+    );
 }
-
-export default App;
