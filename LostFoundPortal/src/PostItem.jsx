@@ -1,136 +1,83 @@
-import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { addItem, getItem, updateItem } from "./api.js";
-import { useAuth } from "./AuthContext.jsx";
-
-const CATEGORIES = ["electronics", "accessories", "bags", "documents", "keys", "clothing", "other"];
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function PostItem() {
-    const { id } = useParams();
-    const { user } = useAuth();
     const navigate = useNavigate();
+    const user = JSON.parse(localStorage.getItem("user"));
 
-    const isEditing = id !== undefined;
+    const [form, setForm] = useState({
+        title: "",
+        status: "lost",
+        category: "other",
+        location: "",
+        contact: "",
+        description: "",
+    });
 
-    const [title, setTitle] = useState("");
-    const [status, setStatus] = useState("lost");
-    const [category, setCategory] = useState("other");
-    const [location, setLocation] = useState("");
-    const [imageUrl, setImageUrl] = useState("");
-    const [description, setDescription] = useState("");
-    const [errorMessage, setErrorMessage] = useState("");
+    function handleChange(e) {
+        setForm({ ...form, [e.target.name]: e.target.value });
+    }
 
-    useEffect(function () {
-        if (!user) {
-            navigate("/auth");
-        }
-    }, [user]);
+    async function handleSubmit(e) {
+        e.preventDefault();
 
-    useEffect(function () {
-        if (!isEditing) {
-            return;
-        }
+        await fetch("http://localhost:5000/api/items", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ ...form, postedBy: user.name }),
+        });
 
-        getItem(id)
-            .then(function (item) {
-                setTitle(item.title);
-                setStatus(item.status);
-                setCategory(item.category);
-                setLocation(item.location);
-                setImageUrl(item.imageUrl);
-                setDescription(item.description);
-            })
-            .catch(function () {
-                navigate("/browse");
-            });
-    }, [id]);
+        navigate("/browse");
+    }
 
-    async function handleSubmit(event) {
-        event.preventDefault();
-        setErrorMessage("");
-
-        const itemData = {
-            title: title,
-            status: status,
-            category: category,
-            location: location,
-            imageUrl: imageUrl,
-            description: description,
-            postedBy: user.name,
-        };
-
-        try {
-            if (isEditing) {
-                await updateItem(id, itemData);
-            } else {
-                await addItem(itemData);
-            }
-            navigate("/dashboard");
-        } catch (error) {
-            setErrorMessage(error.message);
-        }
+    if (!user) {
+        return (
+            <div className="page">
+                <h1>Report an item</h1>
+                <p>
+                    Please <Link to="/login">login</Link> first to report an item.
+                </p>
+            </div>
+        );
     }
 
     return (
-        <main>
-            <section className="page-head">
-                <p className="eyebrow">{isEditing ? "Edit" : "New report"}</p>
-                <h1>{isEditing ? "Edit your item" : "Report an item"}</h1>
-                <p className="page-sub">Give as many details as you can so the owner can recognise it.</p>
-            </section>
+        <div className="page">
+            <h1>Report an item</h1>
 
-            <div className="control-bar form-card">
-                <form className="item-form" onSubmit={handleSubmit}>
-                    <label>
-                        Item name
-                        <input type="text" value={title} onChange={(event) => setTitle(event.target.value)} required />
-                    </label>
+            <form className="form" onSubmit={handleSubmit}>
+                <label>Item name</label>
+                <input name="title" value={form.title} onChange={handleChange} required />
 
-                    <div className="form-row">
-                        <label>
-                            Status
-                            <select value={status} onChange={(event) => setStatus(event.target.value)}>
-                                <option value="lost">Lost</option>
-                                <option value="found">Found</option>
-                            </select>
-                        </label>
+                <label>Lost or found?</label>
+                <select name="status" value={form.status} onChange={handleChange}>
+                    <option value="lost">Lost</option>
+                    <option value="found">Found</option>
+                </select>
 
-                        <label>
-                            Category
-                            <select value={category} onChange={(event) => setCategory(event.target.value)}>
-                                {CATEGORIES.map(function (categoryName) {
-                                    return (
-                                        <option key={categoryName} value={categoryName}>
-                                            {categoryName}
-                                        </option>
-                                    );
-                                })}
-                            </select>
-                        </label>
-                    </div>
+                <label>Category</label>
+                <select name="category" value={form.category} onChange={handleChange}>
+                    <option value="electronics">Electronics</option>
+                    <option value="bags">Bags</option>
+                    <option value="documents">Documents</option>
+                    <option value="keys">Keys</option>
+                    <option value="clothing">Clothing</option>
+                    <option value="other">Other</option>
+                </select>
 
-                    <label>
-                        Location
-                        <input type="text" value={location} onChange={(event) => setLocation(event.target.value)} required />
-                    </label>
+                <label>Location</label>
+                <input name="location" value={form.location} onChange={handleChange} required />
 
-                    <label>
-                        Image URL (optional)
-                        <input type="text" value={imageUrl} onChange={(event) => setImageUrl(event.target.value)} />
-                    </label>
+                <label>Your phone number or email</label>
+                <input name="contact" value={form.contact} onChange={handleChange} required />
 
-                    <label>
-                        Description
-                        <textarea rows="4" value={description} onChange={(event) => setDescription(event.target.value)} />
-                    </label>
+                <label>Description</label>
+                <textarea name="description" rows="3" value={form.description} onChange={handleChange} />
 
-                    {errorMessage && <p className="form-error">{errorMessage}</p>}
-
-                    <button className="btn btn-gold btn-full" type="submit">
-                        {isEditing ? "Update item" : "Submit report"}
-                    </button>
-                </form>
-            </div>
-        </main>
+                <button className="btn btn-gold" type="submit">
+                    Submit
+                </button>
+            </form>
+        </div>
     );
 }

@@ -1,48 +1,37 @@
-import { Link, NavLink, useNavigate } from "react-router-dom";
-import { useAuth } from "./AuthContext.jsx";
+import { Link } from "react-router-dom";
 
 export default function Navbar() {
-    const { user, logout } = useAuth();
-    const navigate = useNavigate();
+    const user = JSON.parse(localStorage.getItem("user"));
 
-    function handleLogout() {
-        logout();
-        navigate("/");
+    function logout() {
+        localStorage.removeItem("user");
+        window.location.href = "/";
     }
 
     return (
-        <header className="navbar">
-            <Link to="/" className="brand">
-                <span className="brand-beacon"></span>
+        <nav className="navbar">
+            <Link to="/" className="logo">
                 Starlight
             </Link>
 
-            <nav className="nav-links">
-                <NavLink to="/" end>
-                    Home
-                </NavLink>
-                <NavLink to="/browse">Browse</NavLink>
-                <NavLink to="/post">Report an item</NavLink>
-                <NavLink to="/dashboard">My activity</NavLink>
-            </nav>
-
-            <div className="nav-actions">
-                {user && <span className="nav-user">Hi, {user.name}</span>}
+            <div className="links">
+                <Link to="/">Home</Link>
+                <Link to="/browse">Browse</Link>
+                <Link to="/post">Report an item</Link>
 
                 {user ? (
-                    <button className="btn btn-ghost" onClick={handleLogout}>
-                        Log out
-                    </button>
+                    <>
+                        <span>Hi, {user.name}</span>
+                        <button className="btn" onClick={logout}>
+                            Logout
+                        </button>
+                    </>
                 ) : (
-                    <Link to="/auth" className="btn btn-ghost">
-                        Log in
+                    <Link to="/login" className="btn">
+                        Login
                     </Link>
                 )}
-
-                <Link to="/post" className="btn btn-gold">
-                    Report item
-                </Link>
             </div>
-        </header>
+        </nav>
     );
 }
