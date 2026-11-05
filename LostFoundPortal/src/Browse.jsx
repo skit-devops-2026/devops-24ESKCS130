@@ -30,6 +30,19 @@ export default function Browse() {
         });
     }
 
+    function markReturned(id) {
+        fetch(API + "/" + id, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ resolved: true }),
+        })
+            .then((res) => res.json())
+            .then((updatedItem) => {
+                setItems(items.map((item) => (item._id === id ? updatedItem : item)));
+                setSelected(updatedItem);
+            });
+    }
+
     return (
         <div className="page">
             <h1>Browse items</h1>
@@ -59,6 +72,7 @@ export default function Browse() {
                 {shownItems.map((item) => (
                     <div className="card" key={item._id} onClick={() => setSelected(item)}>
                         <span className={"badge " + item.status}>{item.status}</span>
+                        {item.resolved && <span className="badge returned">returned</span>}
                         <h3>{item.title}</h3>
                         <p>{item.location}</p>
                         <small>{new Date(item.createdAt).toLocaleDateString()}</small>
@@ -72,6 +86,7 @@ export default function Browse() {
                 <div className="modal-background" onClick={() => setSelected(null)}>
                     <div className="modal" onClick={(e) => e.stopPropagation()}>
                         <span className={"badge " + selected.status}>{selected.status}</span>
+                        {selected.resolved && <span className="badge returned">returned</span>}
                         <h2>{selected.title}</h2>
                         <p>Location: {selected.location}</p>
                         <p>Category: {selected.category}</p>
@@ -87,6 +102,11 @@ export default function Browse() {
                         )}
 
                         <div className="modal-buttons">
+                            {user && user.name === selected.postedBy && !selected.resolved && (
+                                <button className="btn btn-gold" onClick={() => markReturned(selected._id)}>
+                                    Mark as returned
+                                </button>
+                            )}
                             {user && user.name === selected.postedBy && (
                                 <button className="btn" onClick={() => deleteItem(selected._id)}>
                                     Delete

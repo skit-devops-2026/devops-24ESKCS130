@@ -9,7 +9,7 @@
  # Lost & Found Portal is a full-stack web application designed to help campuses, offices, or organizations manage lost and found items in one centralized, searchable place — instead of relying on notice boards, WhatsApp groups, or word of mouth that rarely reach the right person.
 
 **Core Features**
-
+            
 - 📢 **Centralized Reporting** — Users can report lost or found items with details like title, description, category, location, and date, all stored in one organized platform.
 - 🔍 **Searchable & Filterable Listings** — Browse and search active posts by keyword, category, location, or date — no more scrolling through irrelevant notices.
 - 🔐 **Secure User Authentication** — Every post is tied to a verified, logged-in user, with passwords securely hashed to keep accounts safe.
@@ -31,3 +31,4 @@ make install && make run
 - **Production Health Endpoint**: https://lostfound-portal-24eskcs130.netlify.app/health
 - **Local Deployment URL**: http://localhost:8080
 
+    

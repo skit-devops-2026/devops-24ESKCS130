@@ -153,6 +153,12 @@ a {
   color: #0a1730;
 }
 
+.badge.returned {
+  margin-left: 6px;
+  background-color: #93a4c2;
+  color: #0a1730;
+}
+
 .modal-background {
   position: fixed;
   top: 0;
